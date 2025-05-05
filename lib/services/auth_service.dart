@@ -116,7 +116,7 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     try {
-      await _apiService.get(ApiConfig.login + '/logout');
+      await _apiService.get('${ApiConfig.login}/logout');
     } catch (_) {
       // Ignorar erros durante o logout
     }

@@ -13,7 +13,7 @@ class ApiService {
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      if (token != null) 'Authorization': 'Bearer \',
+      if (token != null) 'Authorization': 'Bearer $token',
     };
   }
 
@@ -37,7 +37,7 @@ class ApiService {
     } on FormatException {
       throw ApiException('Formato de resposta inválido');
     } catch (e) {
-      throw ApiException('Erro inesperado: \');
+      throw ApiException('Erro inesperado: ${e.toString()}');
     }
   }
 
@@ -59,7 +59,7 @@ class ApiService {
     } on FormatException {
       throw ApiException('Formato de resposta inválido');
     } catch (e) {
-      throw ApiException('Erro inesperado: \');
+      throw ApiException('Erro inesperado: ${e.toString()}');
     }
   }
 
@@ -81,7 +81,7 @@ class ApiService {
     } on FormatException {
       throw ApiException('Formato de resposta inválido');
     } catch (e) {
-      throw ApiException('Erro inesperado: \');
+      throw ApiException('Erro inesperado: ${e.toString()}');
     }
   }
 
@@ -103,7 +103,7 @@ class ApiService {
     } on FormatException {
       throw ApiException('Formato de resposta inválido');
     } catch (e) {
-      throw ApiException('Erro inesperado: \');
+      throw ApiException('Erro inesperado: ${e.toString()}');
     }
   }
 
@@ -125,7 +125,7 @@ class ApiService {
           errorMessage = body['message'];
         }
       } catch (_) {
-        errorMessage = 'Erro \';
+        errorMessage = 'Erro ${response.statusCode}';
       }
 
       throw ApiException(errorMessage, statusCode: response.statusCode);

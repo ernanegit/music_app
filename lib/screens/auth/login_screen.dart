@@ -7,7 +7,7 @@ import '../../utils/snackbar_helper.dart';
 import '../../widgets/common/loading_indicator.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -154,8 +154,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 24),
                         
                         // Divisor
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Expanded(child: Divider()),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),

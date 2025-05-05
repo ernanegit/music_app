@@ -8,7 +8,7 @@ void main() {
 }
 
 class MusicoApp extends StatelessWidget {
-  const MusicoApp({Key? key}) : super(key: key);
+  const MusicoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
