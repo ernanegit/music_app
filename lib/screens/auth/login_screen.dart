@@ -1,0 +1,191 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../config/app_routes.dart';
+import '../../providers/auth_provider.dart';
+import '../../utils/validators.dart';
+import '../../utils/snackbar_helper.dart';
+import '../../widgets/common/loading_indicator.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.login(
+      _emailController.text.trim(),
+      _passwordController.text,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pushReplacementNamed(context, AppRoutes.musicians);
+    } else if (authProvider.errorMessage != null) {
+      SnackbarHelper.showErrorSnackBar(
+        context,
+        authProvider.errorMessage!,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    return Scaffold(
+      body: authProvider.isLoading
+          ? const LoadingIndicator()
+          : SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Logo
+                        const Icon(
+                          Icons.music_note,
+                          size: 120,
+                          color: Colors.indigo,
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Título
+                        const Text(
+                          'Bem-vindo à Plataforma Músico',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        
+                        // Subtítulo
+                        const Text(
+                          'Entre para conectar músicos e contratantes',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        
+                        // Campo de Email
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: Validators.validateEmail,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Campo de Senha
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Senha',
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                          obscureText: !_isPasswordVisible,
+                          validator: Validators.validatePassword,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _login(),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Botão de Entrar
+                        ElevatedButton(
+                          onPressed: _login,
+                          child: const Text('ENTRAR'),
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Link para recuperar senha
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.resetPassword,
+                            );
+                          },
+                          child: const Text('Esqueci minha senha'),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Divisor
+                        Row(
+                          children: const [
+                            Expanded(child: Divider()),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Text('OU'),
+                            ),
+                            Expanded(child: Divider()),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Botão para Cadastrar
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.register,
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.indigo),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: const Text('CRIAR CONTA'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+}
