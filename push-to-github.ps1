@@ -1,8 +1,7 @@
 # Script para enviar o projeto Flutter para o GitHub
 # Executar no diretório raiz do projeto Flutter
 
-# URL do repositório remoto
-$repoUrl = "https://github.com/ernanegit/music_app.git"
+# URL do repositório r
 
 # Verificar se o Git está instalado
 try {

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 // Importações serão adicionadas automaticamente pelo VSCode
